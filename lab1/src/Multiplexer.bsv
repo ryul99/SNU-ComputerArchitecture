@@ -11,11 +11,14 @@ function Bit#(1) not1(Bit#(1) a);
 endfunction
 
 function Bit#(1) multiplexer1(Bit#(1) sel, Bit#(1) a, Bit#(1) b);
-  return (sel == 0)? a : b;
+  return or1(and1(a, ~sel), and1(b, sel));
 endfunction
 
 function Bit#(64) multiplexer64(Bit#(1) sel, Bit#(64) a, Bit#(64) b);
-  return (sel == 0)? a : b;
+    Bit#(64) aggregate;
+    for(Integer i = 0; i < 64; i = i + 1)
+        aggregate[i] = multiplexer1(sel, a[i], b[i]);
+    return aggregate;
 endfunction
 
 typedef 64 N;
