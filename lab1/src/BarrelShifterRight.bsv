@@ -16,9 +16,10 @@ module mkBarrelShifterRight(BarrelShifterRight);
     /* TODO: Implement right barrel shifter using six multiplexers. */
     for(Integer i = 0; i < 6 ; i = i + 1) begin
       for(Integer j = 0 ; j < shift; j = j + 1)
-        re[j] = multiplexer_n(shiftAmt[i],re[j],shiftValue);
+        re[63-j] = shiftValue;
       for(Integer j = shift; j < 64; j = j + 1)
-        re[j] = multiplexer_n(shiftAmt[i],re[j],in[j - shift]);
+        re[63-j] = in[63-j+shift];
+      re = multiplexer_n(shiftAmt[i], in, re);
       for(Integer j = 0; j < 64; j = j + 1)
         in[j] =  re[j];
       shift = shift * 2;
@@ -46,7 +47,7 @@ module mkBarrelShifterRightArithmetic(BarrelShifterRightArithmetic);
   let bsr <- mkBarrelShifterRight;
   method ActionValue#(Bit#(64)) rightShift(Bit#(64) val, Bit#(6) shiftAmt);
     /* TODO: Implement arithmetic right shifter using the right shifter */
-    let result <- ?;
-    return 0;
+    let result <- bsr.rightShift(val,shiftAmt,val[63]);
+    return result;
   endmethod
 endmodule
