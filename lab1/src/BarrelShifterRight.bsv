@@ -36,9 +36,6 @@ module mkBarrelShifterRightLogical(BarrelShifterRightLogical);
   method ActionValue#(Bit#(64)) rightShift(Bit#(64) val, Bit#(6) shiftAmt);
     /* TODO: Implement logical right shifter using the right shifter */
     let result <- bsr.rightShift(val,shiftAmt,0);
-//    Bit#(64) result <- re;
-/*    for(Integer i = 0; i < 64; i = i + 1)
-      result[i] = re::_read[i];*/
     return result;
   endmethod
 endmodule

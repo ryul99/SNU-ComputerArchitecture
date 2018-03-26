@@ -30,7 +30,7 @@ endfunction
 
 //typedef 64 N; // Not needed
 function Bit#(n) multiplexer_n(Bit#(1) sel, Bit#(n) a, Bit#(n) b);
-    Bit#(n) r;
+    Bit#(n) r = 0;
     let valn = valueOf(n);
     for(Integer i = 0; i < valn; i = i + 1)
         r[i] = multiplexer1(sel[i], a[i], b[i]);
