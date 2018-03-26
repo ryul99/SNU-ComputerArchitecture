@@ -12,7 +12,9 @@ module mkBarrelShifterRight(BarrelShifterRight);
     Integer shift = 1;
     /* TODO: Implement right barrel shifter using six multiplexers. */
     for(Integer i = 0; i < 6 ; i = i + 1) begin
-      let origin = re;
+      Bit#(64) origin;
+      for(Integer j = 0; j < 64; j = j + 1)
+        origin[j] = re[j];
       for(Integer j = 0 ; j < shift; j = j + 1) begin
         re[j] = shiftValue;
       end
@@ -22,7 +24,7 @@ module mkBarrelShifterRight(BarrelShifterRight);
       re = multiplexer_n(shiftAmt[i],origin,re);
       shift = shift * 2;
     end
-    let result <- re;
+    let result <- Bit#(64) re;
     return 0;
   endmethod
 endmodule
