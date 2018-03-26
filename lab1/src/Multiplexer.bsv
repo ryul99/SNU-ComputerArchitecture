@@ -25,7 +25,7 @@ endfunction
 
 typedef 64 N;
 function Bit#(N) multiplexerN(Bit#(1) sel, Bit#(N) a, Bit#(N) b);
-  return multiplexer64(sel, a, b);
+  return multiplexer_n(sel, a, b);
 endfunction
 
 //typedef 64 N; // Not needed
