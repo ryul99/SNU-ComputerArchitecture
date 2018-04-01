@@ -13,61 +13,101 @@ endinterface
 module mkBarrelShifterRightPipelined(BarrelShifterRightPipelined);
 	let inFifo <- mkFIFOF;
 	let outFifo <- mkFIFOF;
-  Integer n = 71;
-  Vector#(7,FIFO#(Tuple3)) midFifo = newVector;
-//  FIFOF#(FIFOF) midFifo[7] = 0;
-  
-  for(Integer i = 0; i < 7; i = i+1) begin
-    midFifo[i] <- mkFIFOF;
-//    midFifo[i] = 0;
-  end
+  let midFifo1 <- mkFIFOF;
+  let midFifo2 <- mkFIFOF;
+  let midFifo3 <- mkFIFOF;
+  let midFifo4 <- mkFIFOF;
+  let midFifo5 <- mkFIFOF;
 
-	rule shift;
-		/* TODO: Implement a pipelined right shift logic. */
-//    method ActionValue#(Bit#(64)) rightShift(Bit#(64) val, Bit#(6) shiftAmt, Bit#(1) shiftValue);
+	rule shift1 if(inFifo.notEmpty()&&midFifo1.notFull);
       Bit#(64) re = 0;
-      Integer shift = 1;
       Bit#(64) in = 0;
-//      for(Integer i = 0; i < 64; i = i+1)
-//       in[i] = val[i];
-//     for(Integer i = 0; i < 64; i = i+1)
-//       re[i] = val[i];
-      midFifo[0] <= inFifo;
-     /* TODO: Implement right barrel shifter using six multiplexers. */
-      for(Integer i = 1; i <= 6 ; i = i + 1) begin
-/*
-        if(i == 0&&inFifo.notEmpty()&&midFifo[0].notFull()) begin
-          inFifo.deq;
+      Integer shift = 1;
           in = tpl_1(inFifo.first);
           Bit#(6) shiftAmt = tpl_2(inFifo.first);
           Bit#(1) shiftValue = tpl_3(inFifo.first);
-          midFifo[0].enq(rightShifting(in, shiftAmt,shiftValue));
-        end
-        if(i == 5&&midFifo[4].notEmpty()&&outFifo.notFull()) begin
-          midFifo[4].deq;
-          in = tpl_1(midFifo[4].first);
-          Bit#(6) shiftAmt = tpl_2(midFifo[4].first);
-          Bit#(1) shiftValue = tpl_3(midFifo[4].first);
-          outFifo.enq(rightShifting(in, shiftAmt, shiftValue));
-        end
-        */
-        if(i>0 && midFifo[i-1].notEmpty()&&midFifo[i].notFull) begin 
-          in = tpl_1(midFifo[i-1].first);
-          Bit#(6) shiftAmt = tpl_2(midFifo[i-1].first);
-          Bit#(1) shiftValue = tpl_3(midFifo[i-1].first);
-          midFifo[i-1].deq;
+          inFifo.deq;
           for(Integer j = 0 ; j < shift; j = j + 1)
           re[63-j] = shiftValue;
           for(Integer j = shift; j < 64; j = j + 1)
           re[63-j] = in[63-j+shift];
-          re = multiplexer_n(shiftAmt[i], in, re);
-          midFifo[i].enq(tuple3(re,shiftAmt,shiftValue));
-          shift = shift * 2;
-        end
-      end
-//      return re;
-//    endmethod
-		//noAction;
+          re = multiplexer_n(shiftAmt[0], in, re);
+          midFifo1.enq(tuple3(re,shiftAmt,shiftValue));
+	endrule
+	rule shift2 if(midFifo1.notEmpty()&&midFifo2.notFull);
+      Bit#(64) re = 0;
+      Bit#(64) in = 0;
+      Integer shift = 2; 
+          in = tpl_1(midFifo1.first);
+          Bit#(6) shiftAmt = tpl_2(midFifo1.first);
+          Bit#(1) shiftValue = tpl_3(midFifo1.first);
+          midFifo1.deq;
+          for(Integer j = 0 ; j < shift; j = j + 1)
+          re[63-j] = shiftValue;
+          for(Integer j = shift; j < 64; j = j + 1)
+          re[63-j] = in[63-j+shift];
+          re = multiplexer_n(shiftAmt[1], in, re);
+          midFifo2.enq(tuple3(re,shiftAmt,shiftValue));
+	endrule
+	rule shift3 if(midFifo2.notEmpty()&&midFifo3.notFull);
+      Bit#(64) re = 0;
+      Bit#(64) in = 0;
+      Integer shift = 4; 
+          in = tpl_1(midFifo2.first);
+          Bit#(6) shiftAmt = tpl_2(midFifo2.first);
+          Bit#(1) shiftValue = tpl_3(midFifo2.first);
+          midFifo2.deq;
+          for(Integer j = 0 ; j < shift; j = j + 1)
+          re[63-j] = shiftValue;
+          for(Integer j = shift; j < 64; j = j + 1)
+          re[63-j] = in[63-j+shift];
+          re = multiplexer_n(shiftAmt[2], in, re);
+          midFifo3.enq(tuple3(re,shiftAmt,shiftValue));
+	endrule
+	rule shift4 if(midFifo3.notEmpty()&&midFifo4.notFull);
+      Bit#(64) re = 0;
+      Bit#(64) in = 0;
+      Integer shift = 8; 
+          in = tpl_1(midFifo3.first);
+          Bit#(6) shiftAmt = tpl_2(midFifo3.first);
+          Bit#(1) shiftValue = tpl_3(midFifo3.first);
+          midFifo3.deq;
+          for(Integer j = 0 ; j < shift; j = j + 1)
+          re[63-j] = shiftValue;
+          for(Integer j = shift; j < 64; j = j + 1)
+          re[63-j] = in[63-j+shift];
+          re = multiplexer_n(shiftAmt[3], in, re);
+          midFifo4.enq(tuple3(re,shiftAmt,shiftValue));
+	endrule
+	rule shift5 if(midFifo4.notEmpty()&&midFifo5.notFull);
+      Bit#(64) re = 0;
+      Bit#(64) in = 0;
+      Integer shift = 16; 
+          in = tpl_1(midFifo4.first);
+          Bit#(6) shiftAmt = tpl_2(midFifo4.first);
+          Bit#(1) shiftValue = tpl_3(midFifo4.first);
+          midFifo4.deq;
+          for(Integer j = 0 ; j < shift; j = j + 1)
+          re[63-j] = shiftValue;
+          for(Integer j = shift; j < 64; j = j + 1)
+          re[63-j] = in[63-j+shift];
+          re = multiplexer_n(shiftAmt[4], in, re);
+          midFifo5.enq(tuple3(re,shiftAmt,shiftValue));
+	endrule
+	rule shift6 if(midFifo5.notEmpty()&&outFifo.notFull);
+      Bit#(64) re = 0;
+      Bit#(64) in = 0;
+      Integer shift = 32;
+      in = tpl_1(midFifo5.first);
+      Bit#(6) shiftAmt = tpl_2(midFifo5.first);
+      Bit#(1) shiftValue = tpl_3(midFifo5.first);
+      midFifo5.deq;
+      for(Integer j = 0 ; j < shift; j = j + 1)
+      re[63-j] = shiftValue;
+      for(Integer j = shift; j < 64; j = j + 1)
+      re[63-j] = in[63-j+shift];
+      re = multiplexer_n(shiftAmt[5], in, re);
+      outFifo.enq(tuple3(re,shiftAmt,shiftValue));
 	endrule
 
 	method Action shift_request(Bit#(64) operand, Bit#(6) shamt, Bit#(1) val);
@@ -75,7 +115,7 @@ module mkBarrelShifterRightPipelined(BarrelShifterRightPipelined);
 	endmethod
 
 	method ActionValue#(Bit#(64)) shift_response();
-    let v = outFifo.first;
+    Bit#(64) v = tpl_1(outFifo.first);
 		outFifo.deq;
 		return v;
 	endmethod
@@ -111,12 +151,14 @@ module mkBarrelShifterLeftPipelined(BarrelShifterLeftPipelined);
 	let bsrp <- mkBarrelShifterRightPipelined;
 
 	method Action shift_request(Bit#(64) operand, Bit#(6) shamt);
-		noAction;
+		let reverse = reverseBits(operand);
+    bsrp.shift_request(reverse, shamt, 0);
 	endmethod
 
 	method ActionValue#(Bit#(64)) shift_response();
-		let result <- ?;
-		return 0;
+    Bit#(64) re <- bsrp.shift_response();
+		let result = reverseBits(re);
+		return result;
 	endmethod
 endmodule
 
@@ -125,12 +167,12 @@ module mkBarrelShifterRightLogicalPipelined(BarrelShifterRightLogicalPipelined);
 	let bsrp <- mkBarrelShifterRightPipelined;
 
 	method Action shift_request(Bit#(64) operand, Bit#(6) shamt);
-		noAction;
+		bsrp.shift_request(operand, shamt, 0);
 	endmethod
 
 	method ActionValue#(Bit#(64)) shift_response();
-		let result <- ?;
-		return 0;
+		let result <- bsrp.shift_response();
+		return result;
 	endmethod
 endmodule
 
@@ -139,11 +181,12 @@ module mkBarrelShifterRightArithmeticPipelined(BarrelShifterRightArithmeticPipel
 	let bsrp <- mkBarrelShifterRightPipelined;
 
 	method Action shift_request(Bit#(64) operand, Bit#(6) shamt);
-		noAction;
+    let a = operand[63];
+    bsrp.shift_request(operand,shamt,a);
 	endmethod
 
 	method ActionValue#(Bit#(64)) shift_response();
-		let result <- ?;
-		return 0;
+		let result <- bsrp.shift_response();
+		return result;
 	endmethod
 endmodule
