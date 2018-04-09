@@ -136,20 +136,54 @@ endmodule
 module mkFftPipelined(Fft);
   Fifo#(2, Vector#(FftPoints, ComplexData)) inFifo <- mkCFFifo;
   Fifo#(2, Vector#(FftPoints, ComplexData)) outFifo <- mkCFFifo;
+  Fifo#(2, Vector#(FftPoints, ComplexData)) midFifo1 <- mkCFFifo;
+  Fifo#(2, Vector#(FftPoints, ComplexData)) midFifo2 <- mkCFFifo;
+  
   Vector#(NumStages, Vector#(BflysPerStage, Bfly4)) bfly <- replicateM(replicateM(mkBfly4));
 
   // You can copy & modify the stage_f function in the combinational implementation.
+  function Vector#(FftPoints, ComplexData) stage_f(StageIdx stage, Vector#(FftPoints, ComplexData) stage_in);
+    Vector#(FftPoints, ComplexData) stage_temp, stage_out;
+    for (FftIdx i = 0; i < fromInteger(valueOf(BflysPerStage)); i = i + 1)
+    begin
+      FftIdx idx = i * 4;
+      Vector#(4, ComplexData) x;
+      Vector#(4, ComplexData) twid;
+      for (FftIdx j = 0; j < 4; j = j + 1 )
+      begin
+        x[j] = stage_in[idx+j];
+        twid[j] = getTwiddle(stage, idx+j);
+      end
+      let y = bfly[stage][i].bfly4(twid, x);
 
-  rule doFft;
-    //TODO: Remove below two lines Implement the rest of this module
-	outFifo.enq(inFifo.first);
-	inFifo.deq;
+      for(FftIdx j = 0; j < 4; j = j + 1 )
+        stage_temp[idx+j] = y[j];
+    end
+
+    stage_out = permute(stage_temp);
+
+    return stage_out;
+  endfunction
+
+  rule first if(inFifo.notEmpty()&&midFifo1.notFull());
+    inFifo.deq();
+    midFifo1.enq(stage_f(0, inFifo.first()));
+  endrule
+
+  rule second if(midFifo1.notEmpty()&&midFifo2.notFull());
+    midFifo1.deq();
+    midFifo2.enq(stage_f(1, midFifo1.first()));
+  endrule
+
+  rule third if(midFifo2.notEmpty()&&outFifo.notFull());
+    midFifo2.deq();
+    outFifo.enq(stage_f(2,midFifo2.first()));
   endrule
 
   method Action enq(Vector#(FftPoints, ComplexData) in);
     inFifo.enq(in);
   endmethod
-
+    
   method ActionValue#(Vector#(FftPoints, ComplexData)) deq;
     outFifo.deq;
     return outFifo.first;
