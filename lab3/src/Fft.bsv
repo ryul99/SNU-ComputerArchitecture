@@ -61,16 +61,67 @@ endmodule
 module mkFftFolded(Fft);
   Fifo#(2, Vector#(FftPoints, ComplexData)) inFifo <- mkCFFifo;
   Fifo#(2, Vector#(FftPoints, ComplexData)) outFifo <- mkCFFifo;
-  Vector#(BflysPerStage, Bfly4) bfly <- replicateM(mkBfly4);
-
+  Reg#(Vector#(FftPoints, ComplexData))  sFifo <- mkReg(replicate(0));
+  Reg#(Bit#(3)) eee <- mkReg(0);
+  //Vector#(FftPoints, ComplexData) sxIn = replicate(0);
+  Vector#(NumStages, Vector#(BflysPerStage, Bfly4)) bfly <- replicateM(replicateM(mkBfly4));
+  StageIdx stagee = 0;
   // You can copy & modify the stage_f function in the combinational implementation.
+  function Vector#(FftPoints, ComplexData) stage_f(StageIdx stage, Vector#(FftPoints, ComplexData) stage_in);
+    Vector#(FftPoints, ComplexData) stage_temp, stage_out;
+    for (FftIdx i = 0; i < fromInteger(valueOf(BflysPerStage)); i = i + 1)
+    begin
+      FftIdx idx = i * 4;
+      Vector#(4, ComplexData) x;
+      Vector#(4, ComplexData) twid;
+      for (FftIdx j = 0; j < 4; j = j + 1 )
+      begin
+        x[j] = stage_in[idx+j];
+        twid[j] = getTwiddle(stage, idx+j);
+      end
+      let y = bfly[stage][i].bfly4(twid, x);
 
-  rule doFft;
+      for(FftIdx j = 0; j < 4; j = j + 1 )
+        stage_temp[idx+j] = y[j];
+    end
+
+    stage_out = permute(stage_temp);
+
+    return stage_out;
+  endfunction
+
+  rule doFft if (True);
+    Vector#(FftPoints, ComplexData) sxIn;
+    if(eee==0)
+    begin 
+      sxIn = inFifo.first(); inFifo.deq(); 
+    end
+    else sxIn = sFifo;
+    let sxOut = stage_f(eee, sxIn);
+    if(eee==2)
+      outFifo.enq(sxOut);
+    else
+      sFifo <= sxOut;
+    eee <= ((eee==2) ? 0 : eee+1);
+  endrule
+/*
+  rule doEntry if(eee==0);
     //TODO: Remove below two lines and Implement the rest of this module
-	outFifo.enq(inFifo.first);
-	inFifo.deq;
+    inFifo.deq;
+    sFifo <= stage_f(stagee, inFifo.first);
+    eee <= eee+1;
   endrule
 
+  rule doCirculate if ((eee!=0) && (eee<2));
+    sFifo <= stage_f(eee, sFifo);
+    eee <= eee+1;
+  endrule
+
+  rule doExit if (eee==2);
+    outFifo.enq(stage_f(eee, sFifo));
+    eee <= 0;
+  endrule
+*/
   method Action enq(Vector#(FftPoints, ComplexData) in);
     inFifo.enq(in);
   endmethod
