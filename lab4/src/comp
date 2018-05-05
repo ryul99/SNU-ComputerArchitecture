@@ -1,0 +1,12 @@
+144c144
+< Opq Function:			Nop
+---
+> Opq Function:			Add
+158c158
+< Opq Function:			Nop
+---
+> Opq Function:			Add
+356c356
+< Destination Register:	dstE : Invalid
+---
+> Destination Register:	dstE :  4
