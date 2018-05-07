@@ -9,7 +9,7 @@ import Exec::*;
 import Cop::*;
 import Fifo::*;
 
-typedef enum {Fetch, Execute} Stage deriving(Bits, Eq);
+typedef enum {Fetch, Execute, Memory, WriteBack} Stage deriving(Bits, Eq);
 
 (*synthesize*)
 module mkProc(Proc);
@@ -26,6 +26,8 @@ module mkProc(Proc);
 	Fifo#(1,ProcStatus) statRedirect <- mkBypassFifo;
 
 	Reg#(Inst)	f2e <- mkRegU;
+  Reg#(ExecInst)  e2m <- mkRegU;
+  Reg#(ExecInst)  m2w <- mkRegU;
 
 	rule doFetch(cop.started && stat == AOK && stage == Fetch);
 		/* Fetch */
@@ -36,12 +38,12 @@ module mkProc(Proc);
 		f2e <= inst;
 	endrule
 
-	rule doRest(cop.started && stat == AOK && stage == Execute);
+	rule doExecute(cop.started && stat == AOK && stage == Execute);
 		/* TODO: Divide the doExecute rule into doExecute, doMemory and doWriteBack rules */
 		/* The doMemory rule should be skipped whenever it is not required. */
 
 		/* Decode */
-		let inst	 = f2e;
+		let inst = f2e;
 		let dInst = decode(inst, pc);
 
 		$display("Decode : from Pc %d , expanded inst : %x, \n", pc, inst, showInst(inst));
@@ -56,9 +58,21 @@ module mkProc(Proc);
 		condFlag <= eInst.condFlag;
 
 		$display("Exec : ppc %d", dInst.valP);
+    case(eInst.iType)
+      MRmov, Pop, Ret, RMmov, Call, Push : begin
+        stage <= Memory;
+        e2m <= eInst;
+      end
+      default : begin
+        stage <= WriteBack;
+        m2w <= eInst;
+      end
+    endcase
+  endrule
 
-
+	rule doMemory(cop.started && stat == AOK && stage == Memory);
 		/* Memory */
+    let eInst = e2m;
 		let iType = eInst.iType;
 		case(iType)
 			MRmov, Pop, Ret :
@@ -87,9 +101,14 @@ module mkProc(Proc);
 				default	   : AOK;
 		endcase;
 		statRedirect.enq(newStatus);
+    m2w <= eInst;
+    stage <= WriteBack;
+  endrule
 
-
+	rule doWriteBack(cop.started && stat == AOK && stage == WriteBack);
 		/* WriteBack */
+    let eInst = m2w;
+
 		if(isValid(eInst.dstE))
 		begin
 			$display("On %d, writes %d	 (wrE)",validRegValue(eInst.dstE), validValue(eInst.valE));
