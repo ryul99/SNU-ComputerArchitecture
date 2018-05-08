@@ -94,6 +94,13 @@ module mkProc(Proc);
 			end
 		endcase
 
+    m2w <= eInst;
+    stage <= WriteBack;
+  endrule
+
+	rule doWriteBack(cop.started && stat == AOK && stage == WriteBack);
+    let eInst = m2w;
+    let iType = eInst.iType;
 		/* Update Status */
 		let newStatus = case(iType)
 				Unsupported: INS;
@@ -101,14 +108,8 @@ module mkProc(Proc);
 				default	   : AOK;
 		endcase;
 		statRedirect.enq(newStatus);
-    m2w <= eInst;
-    stage <= WriteBack;
-  endrule
 
-	rule doWriteBack(cop.started && stat == AOK && stage == WriteBack);
 		/* WriteBack */
-    let eInst = m2w;
-
 		if(isValid(eInst.dstE))
 		begin
 			$display("On %d, writes %d	 (wrE)",validRegValue(eInst.dstE), validValue(eInst.valE));
