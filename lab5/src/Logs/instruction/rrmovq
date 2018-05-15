@@ -1,0 +1,64 @@
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 6 to 67108863.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 6 to 67108863.
+
+Cycle                    0 ----------------------------------------------------
+
+cycle          0
+Fetch : from Pc                    0 , expanded inst : 30f30200000000000000, 
+irmovq $'h0000000000000002,  %'h3
+
+Cycle                    1 ----------------------------------------------------
+
+cycle          1
+Fetch : from Pc                   10 , expanded inst : 30f10300000000000000, 
+irmovq $'h0000000000000003,  %'h1
+
+Cycle                    2 ----------------------------------------------------
+
+cycle          2
+Fetch : from Pc                   20 , expanded inst : 30f0fbffffffffffffff, 
+irmovq $'hfffffffffffffffb,  %'h0
+
+Cycle                    3 ----------------------------------------------------
+
+cycle          3
+Fetch : from Pc                   30 , expanded inst : 2032201660206060c00e, 
+rrmovq %'h3, %'h2
+
+Cycle                    4 ----------------------------------------------------
+
+cycle          4
+Fetch : from Pc                   32 , expanded inst : 201660206060c00e0000, 
+rrmovq %'h1, %'h6
+
+Cycle                    5 ----------------------------------------------------
+
+cycle          5
+Fetch : from Pc                   34 , expanded inst : 60206060c00e00000000, 
+addq %'h2, %'h0
+
+Cycle                    6 ----------------------------------------------------
+
+cycle          6
+Fetch : from Pc                   36 , expanded inst : 6060c00e000000000000, 
+addq %'h6, %'h0
+
+Cycle                    7 ----------------------------------------------------
+
+cycle          7
+Fetch : from Pc                   38 , expanded inst : c00e0000000000000000, 
+mtc0 %'h0, %'he
+
+Cycle                    8 ----------------------------------------------------
+
+cycle          8
+Fetch : from Pc                   40 , expanded inst : 0000000000000000aaaa, 
+halt
+
+Cycle                    9 ----------------------------------------------------
+
+cycle          9
+Fetch : from Pc                   41 , expanded inst : 00000000000000aaaaaa, 
+halt
+
+Cycle                   10 ----------------------------------------------------

@@ -1,0 +1,98 @@
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 8 to 12.
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 15 to 67108863.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 8 to 12.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 15 to 67108863.
+
+Cycle                    0 ----------------------------------------------------
+
+cycle          0
+Fetch : from Pc                    0 , expanded inst : 30f3fbffffffffffffff, 
+irmovq $'hfffffffffffffffb,  %'h3
+
+Cycle                    1 ----------------------------------------------------
+
+cycle          1
+Fetch : from Pc                   10 , expanded inst : 30f10100000000000000, 
+irmovq $'h0000000000000001,  %'h1
+
+Cycle                    2 ----------------------------------------------------
+
+cycle          2
+Fetch : from Pc                   20 , expanded inst : 30f0ffffffffffffffff, 
+irmovq $'hffffffffffffffff,  %'h0
+
+Cycle                    3 ----------------------------------------------------
+
+cycle          3
+Fetch : from Pc                   30 , expanded inst : 62337130000000000000, 
+andq %'h3, %'h3
+
+Cycle                    4 ----------------------------------------------------
+
+cycle          4
+Fetch : from Pc                   32 , expanded inst : 713000000000000000c0, 
+jle $'h0000000000000030
+
+Cycle                    5 ----------------------------------------------------
+
+cycle          5
+Fetch : from Pc                   41 , expanded inst : c00e0000000000631171, 
+mtc0 %'h0, %'he
+
+Cycle                    6 ----------------------------------------------------
+
+cycle          6
+Fetch : from Pc                   43 , expanded inst : 00000000006311716800, 
+halt
+mispredicted, redirect                   48 
+
+Cycle                    7 ----------------------------------------------------
+
+cycle          7
+Fetch : from Pc                   48 , expanded inst : 63117168000000000000, 
+xorq %'h1, %'h1
+
+Cycle                    8 ----------------------------------------------------
+
+cycle          8
+Fetch : from Pc                   50 , expanded inst : 716800000000000000c0, 
+jle $'h0000000000000068
+
+Cycle                    9 ----------------------------------------------------
+
+cycle          9
+Fetch : from Pc                   59 , expanded inst : c00e000000aaaaaaaaaa, 
+mtc0 %'h0, %'he
+
+Cycle                   10 ----------------------------------------------------
+
+cycle         10
+Fetch : from Pc                   61 , expanded inst : 000000aaaaaaaaaaaaaa, 
+halt
+mispredicted, redirect                  104 
+
+Cycle                   11 ----------------------------------------------------
+
+cycle         11
+Fetch : from Pc                  104 , expanded inst : 30f00000000000000000, 
+irmovq $'h0000000000000000,  %'h0
+
+Cycle                   12 ----------------------------------------------------
+
+cycle         12
+Fetch : from Pc                  114 , expanded inst : c00e00000000aaaaaaaa, 
+mtc0 %'h0, %'he
+
+Cycle                   13 ----------------------------------------------------
+
+cycle         13
+Fetch : from Pc                  116 , expanded inst : 00000000aaaaaaaaaaaa, 
+halt
+
+Cycle                   14 ----------------------------------------------------
+
+cycle         14
+Fetch : from Pc                  117 , expanded inst : 000000aaaaaaaaaaaaaa, 
+halt
+
+Cycle                   15 ----------------------------------------------------
