@@ -1,0 +1,285 @@
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 11 to 14.
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 19 to 22.
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 24 to 32.
+Warning: file 'memory.vmh' for memory 'dMem' has a gap at addresses 35 to 67108863.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 11 to 14.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 19 to 22.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 24 to 32.
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 35 to 67108863.
+
+Cycle                    0 ----------------------------------------------------
+
+cycle          0
+Fetch : from Pc                    0 , expanded inst : 30f44001000000000000, 
+irmovq $'h0000000000000140,  %'h4
+
+Cycle                    1 ----------------------------------------------------
+
+cycle          1
+Decode : from Pc                    0 , expanded inst : 30f44001000000000000, 
+irmovq $'h0000000000000140,  %'h4
+Fetch : from Pc                   10 , expanded inst : 30f54001000000000000, 
+irmovq $'h0000000000000140,  %'h5
+
+Cycle                    2 ----------------------------------------------------
+
+cycle          2
+valA : 12297829382473034410, valB :                    0
+OwO
+Decode : from Pc                   10 , expanded inst : 30f54001000000000000, 
+irmovq $'h0000000000000140,  %'h5
+Fetch : from Pc                   20 , expanded inst : 30f0ffffffffffffffff, 
+irmovq $'hffffffffffffffff,  %'h0
+
+Cycle                    3 ----------------------------------------------------
+
+cycle          3
+valA : 12297829382473034410, valB :                    0
+OwO
+Decode : from Pc                   20 , expanded inst : 30f0ffffffffffffffff, 
+irmovq $'hffffffffffffffff,  %'h0
+Fetch : from Pc                   30 , expanded inst : 633374b8000000000000, 
+xorq %'h3, %'h3
+
+Cycle                    4 ----------------------------------------------------
+
+cycle          4
+On  4, writes                  320   (wrE)
+valA : 12297829382473034410, valB :                    0
+OwO
+Decode : from Pc                   30 , expanded inst : 633374b8000000000000, 
+xorq %'h3, %'h3
+Fetch : from Pc                   32 , expanded inst : 74b80000000000000073, 
+jne $'h00000000000000b8
+Stat update
+
+Cycle                    5 ----------------------------------------------------
+
+cycle          5
+On  5, writes                  320   (wrE)
+valA :                    0, valB :                    0
+OwO
+Decode : from Pc                   32 , expanded inst : 74b80000000000000073, 
+jne $'h00000000000000b8
+Fetch : from Pc                   41 , expanded inst : 733800000000000000c0, 
+je $'h0000000000000038
+Stat update
+
+Cycle                    6 ----------------------------------------------------
+
+cycle          6
+On  0, writes 18446744073709551615   (wrE)
+valA :                    0, valB :                  320
+OwO
+Decode : from Pc                   41 , expanded inst : 733800000000000000c0, 
+je $'h0000000000000038
+Fetch : from Pc                   50 , expanded inst : c00e00000000620075b8, 
+mtc0 %'h0, %'he
+Stat update
+
+Cycle                    7 ----------------------------------------------------
+
+cycle          7
+On  3, writes                    0   (wrE)
+valA :                    0, valB :                  320
+mispredicted, redirect                   56 
+OwO
+Decode : from Pc                   50 , expanded inst : c00e00000000620075b8, 
+mtc0 %'h0, %'he
+Fetch : from Pc                   56 , expanded inst : 620075b8000000000000, 
+andq %'h0, %'h0
+Stat update
+
+Cycle                    8 ----------------------------------------------------
+
+cycle          8
+valA : 18446744073709551615, valB :                  320
+OwO
+Decode : from Pc                   56 , expanded inst : 620075b8000000000000, 
+andq %'h0, %'h0
+Fetch : from Pc                   58 , expanded inst : 75b80000000000000072, 
+jge $'h00000000000000b8
+Stat update
+
+Cycle                    9 ----------------------------------------------------
+
+cycle          9
+valA : 18446744073709551615, valB : 18446744073709551615
+OwO
+Decode : from Pc                   58 , expanded inst : 75b80000000000000072, 
+jge $'h00000000000000b8
+Fetch : from Pc                   67 , expanded inst : 727800000000000000c0, 
+jl $'h0000000000000078
+Stat update
+
+Cycle                   10 ----------------------------------------------------
+
+cycle         10
+valA :                    0, valB :                  320
+OwO
+Decode : from Pc                   67 , expanded inst : 727800000000000000c0, 
+jl $'h0000000000000078
+Fetch : from Pc                   76 , expanded inst : c00e0000633390000000, 
+mtc0 %'h0, %'he
+
+Cycle                   11 ----------------------------------------------------
+
+cycle         11
+On  0, writes 18446744073709551615   (wrE)
+valA :                    0, valB :                  320
+mispredicted, redirect                  120 
+OwO
+Decode : from Pc                   76 , expanded inst : c00e0000633390000000, 
+mtc0 %'h0, %'he
+Fetch : from Pc                  120 , expanded inst : 80500000000000000073, 
+call 'h0000000000000050
+Stat update
+
+Cycle                   12 ----------------------------------------------------
+
+cycle         12
+valA : 18446744073709551615, valB :                  320
+OwO
+Decode : from Pc                  120 , expanded inst : 80500000000000000073, 
+call 'h0000000000000050
+Fetch : from Pc                  129 , expanded inst : 73080100000000000070, 
+je $'h0000000000000108
+Stat update
+
+Cycle                   13 ----------------------------------------------------
+
+cycle         13
+valA :                  320, valB :                  320
+mispredicted, redirect                   80 
+OwO
+Decode : from Pc                  129 , expanded inst : 73080100000000000070, 
+je $'h0000000000000108
+Fetch : from Pc                   80 , expanded inst : 6333900000000000aaaa, 
+xorq %'h3, %'h3
+Stat update
+
+Cycle                   14 ----------------------------------------------------
+
+cycle         14
+Stored                  129 into                  312
+valA : 18446744073709551615, valB :                  320
+OwO
+Decode : from Pc                   80 , expanded inst : 6333900000000000aaaa, 
+xorq %'h3, %'h3
+Fetch : from Pc                   82 , expanded inst : 900000000000aaaaaaaa, 
+ret
+
+Cycle                   15 ----------------------------------------------------
+
+cycle         15
+On  4, writes                  312   (wrE)
+valA :                    0, valB :                    0
+OwO
+Decode : from Pc                   82 , expanded inst : 900000000000aaaaaaaa, 
+ret
+Fetch : from Pc                   83 , expanded inst : 0000000000aaaaaaaaaa, 
+halt
+Stat update
+
+Cycle                   16 ----------------------------------------------------
+
+cycle         16
+valA :                  312, valB :                  312
+OwO
+Decode : from Pc                   83 , expanded inst : 0000000000aaaaaaaaaa, 
+halt
+Fetch : from Pc                   84 , expanded inst : 00000000aaaaaaaaaaaa, 
+halt
+
+Cycle                   17 ----------------------------------------------------
+
+cycle         17
+On  3, writes                    0   (wrE)
+Loaded                  129 from                  312
+valA : 18446744073709551615, valB :                  312
+OwO
+Decode : from Pc                   84 , expanded inst : 00000000aaaaaaaaaaaa, 
+halt
+Fetch : from Pc                  129 , expanded inst : 73080100000000000070, 
+je $'h0000000000000108
+Stat update
+
+Cycle                   18 ----------------------------------------------------
+
+cycle         18
+On  4, writes                  320   (wrE)
+valA : 18446744073709551615, valB :                  312
+OwO
+Decode : from Pc                  129 , expanded inst : 73080100000000000070, 
+je $'h0000000000000108
+Fetch : from Pc                  138 , expanded inst : 70b800000000000000c0, 
+jmp $'h00000000000000b8
+Stat update
+
+Cycle                   19 ----------------------------------------------------
+
+cycle         19
+valA : 18446744073709551615, valB :                  320
+mispredicted, redirect                  264 
+OwO
+Decode : from Pc                  138 , expanded inst : 70b800000000000000c0, 
+jmp $'h00000000000000b8
+Fetch : from Pc                  264 , expanded inst : 30f00000000000000000, 
+irmovq $'h0000000000000000,  %'h0
+
+Cycle                   20 ----------------------------------------------------
+
+cycle         20
+valA :                    0, valB :                  320
+OwO
+Decode : from Pc                  264 , expanded inst : 30f00000000000000000, 
+irmovq $'h0000000000000000,  %'h0
+Fetch : from Pc                  274 , expanded inst : c00e00000000aaaaaaaa, 
+mtc0 %'h0, %'he
+
+Cycle                   21 ----------------------------------------------------
+
+cycle         21
+valA : 12297829382473034410, valB :                  320
+OwO
+Decode : from Pc                  274 , expanded inst : c00e00000000aaaaaaaa, 
+mtc0 %'h0, %'he
+Fetch : from Pc                  276 , expanded inst : 00000000aaaaaaaaaaaa, 
+halt
+Stat update
+
+Cycle                   22 ----------------------------------------------------
+
+cycle         22
+valA :                    0, valB :                  320
+OwO
+Decode : from Pc                  276 , expanded inst : 00000000aaaaaaaaaaaa, 
+halt
+Fetch : from Pc                  277 , expanded inst : 000000aaaaaaaaaaaaaa, 
+halt
+
+Cycle                   23 ----------------------------------------------------
+
+cycle         23
+On  0, writes                    0   (wrE)
+valA : 18446744073709551615, valB :                  320
+OwO
+Decode : from Pc                  277 , expanded inst : 000000aaaaaaaaaaaaaa, 
+halt
+Fetch : from Pc                  278 , expanded inst : 0000aaaaaaaaaaaaaaaa, 
+halt
+Stat update
+
+Cycle                   24 ----------------------------------------------------
+
+cycle         24
+On 14, writes                    0   (wrE)
+valA :                    0, valB :                  320
+OwO
+Decode : from Pc                  278 , expanded inst : 0000aaaaaaaaaaaaaaaa, 
+halt
+Fetch : from Pc                  279 , expanded inst : 00aaaaaaaaaaaaaaaaaa, 
+halt
+Stat update
+
+Cycle                   25 ----------------------------------------------------
