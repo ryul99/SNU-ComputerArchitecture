@@ -1,0 +1,105 @@
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 4 to 67108863.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 4 to 1048575.
+
+Cycle                    0 ----------------------------------------------------
+
+cycle          0
+Fetch1
+Fetch : from Pc                    0 , expanded inst : 30f0ffffffffffffffff, 
+irmovq $'hffffffffffffffff,  %'h0
+
+Cycle                    1 ----------------------------------------------------
+
+cycle          1
+Fetch1
+Fetch : from Pc                   10 , expanded inst : 30f30000000000000000, 
+irmovq $'h0000000000000000,  %'h3
+
+Cycle                    2 ----------------------------------------------------
+
+cycle          2
+Exec on pc                    0
+Fetch1
+Fetch : from Pc                   20 , expanded inst : 63112330c00e00000000, 
+xorq %'h1, %'h1
+
+Cycle                    3 ----------------------------------------------------
+
+cycle          3
+Mem on pc                    0
+Exec on pc                   10
+Fetch1
+Fetch : from Pc                   22 , expanded inst : 2330c00e000000000000, 
+cmove %'h3, %'h0
+
+Cycle                    4 ----------------------------------------------------
+
+cycle          4
+Mem on pc                   10
+Exec on pc                   20
+Write Back
+WriteE writes 18446744073709551615 on  0
+stall occured
+
+Cycle                    5 ----------------------------------------------------
+
+cycle          5
+Mem on pc                   20
+Write Back
+WriteE writes                    0 on  3
+Fetch1
+Fetch : from Pc                   24 , expanded inst : c00e000000000000aaaa, 
+mtc0 %'h0, %'he
+
+Cycle                    6 ----------------------------------------------------
+
+cycle          6
+Exec on pc                   22
+Write Back
+WriteE writes                    0 on  1
+stall occured
+
+Cycle                    7 ----------------------------------------------------
+
+cycle          7
+Mem on pc                   22
+stall occured
+
+Cycle                    8 ----------------------------------------------------
+
+cycle          8
+Write Back
+WriteE writes                    0 on  0
+Fetch1
+Fetch : from Pc                   26 , expanded inst : 000000000000aaaaaaaa, 
+halt
+
+Cycle                    9 ----------------------------------------------------
+
+cycle          9
+Exec on pc                   24
+Fetch1
+Fetch : from Pc                   27 , expanded inst : 0000000000aaaaaaaaaa, 
+halt
+
+Cycle                   10 ----------------------------------------------------
+
+cycle         10
+Mem on pc                   24
+Exec on pc                   26
+Fetch1
+Fetch : from Pc                   28 , expanded inst : 00000000aaaaaaaaaaaa, 
+halt
+
+Cycle                   11 ----------------------------------------------------
+
+cycle         11
+Mem on pc                   26
+Exec on pc                   27
+Write Back
+WriteE writes                    0 on 14
+Fetch1
+Fetch : from Pc                   29 , expanded inst : 000000aaaaaaaaaaaaaa, 
+halt
+
+Cycle                   12 ----------------------------------------------------

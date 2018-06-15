@@ -58,20 +58,68 @@ module mkCacheDirectMap(Cache);
 
 	rule startMiss(status == StartMiss);
 		/* TODO: Implement here */
+    let idx = getIdx(missReq.addr);
+    let tag = tagArray.sub(idx);
+    let dirty = dirtyArray.sub(idx);
+    if(isValid(tag) && dirty) begin //writeback
+      let addr = {validValue(tag), idx, 3'b0};
+      let data = dataArray.sub(idx);
+      memReqQ.enq(CacheMemReq{op: St, addr: addr, data: data, burstLength:1});
+    end
+    status <= SendFillReq;
 	endrule
 
 	rule sendFillReq(status == SendFillReq);
 		/* TODO: Implement here */
+    let idx = getIdx(missReq.addr);
+    let tag = tagArray.sub(idx);
+    let addr = {validValue(tag), idx, 3'b0};
+    Line l = newVector;
+    l[0] = missReq.data;
+    let data = l;
+    memReqQ.enq(CacheMemReq{op: missReq.op, addr: missReq.addr, data: data, burstLength:1});
+    status <= WaitFillResp;
 	endrule
 
 	rule waitFillResp(status == WaitFillResp);
 		/* TODO: Implement here */
+    let idx = getIdx(missReq.addr);
+    let tag = getTag(missReq.addr);
+    let data = memRespQ.first;
+    dataArray.upd(idx, data);
+    tagArray.upd(idx, Valid(tag));
+    dirtyArray.upd(idx, False);
+    hitQ.enq(data[0]);
+    memRespQ.deq;
+    status <= Ready;
 	endrule
 
 	method Action req(MemReq r) if (status == Ready && inited);
 		/* TODO: Implement here */
+    let idx = getIdx(r.addr);
+    let tag = getTag(r.addr);
+    let currTag = tagArray.sub(idx);
+		let hit = isValid(currTag)? validValue(currTag) == tag : False;
 
-		let hit = ?;
+    if(r.op == Ld) begin
+      if(hit) hitQ.enq(dataArray.sub(idx)[0]);
+      else begin missReq <= r; status <= StartMiss; end
+    end
+    else begin//It is a store request
+      if(hit) begin
+        let asdf = r.data;
+        Line l = newVector;
+        l[0] = asdf;
+        dataArray.upd(idx, l);
+        dirtyArray.upd(idx, True);
+      end
+      else begin//write-miss no allocate
+       let addr = {tag, idx, 3'b0};
+       Line addd = newVector;
+       addd[0] = r.data;
+       memReqQ.enq(CacheMemReq{op: St, addr: addr, data: addd, burstLength:1});
+      end
+    end
 
 		/* DO NOT MODIFY BELOW HERE! */
 		if(!hit)

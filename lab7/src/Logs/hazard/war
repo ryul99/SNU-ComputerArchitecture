@@ -1,0 +1,137 @@
+Warning: file 'memory.vmh' for memory 'iMem' has a gap at addresses 5 to 67108863.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 5 to 1048575.
+
+Cycle                    0 ----------------------------------------------------
+
+cycle          0
+Fetch1
+Fetch : from Pc                    0 , expanded inst : 30f00100000000000000, 
+irmovq $'h0000000000000001,  %'h0
+
+Cycle                    1 ----------------------------------------------------
+
+cycle          1
+Fetch1
+Fetch : from Pc                   10 , expanded inst : 30f30500000000000000, 
+irmovq $'h0000000000000005,  %'h3
+
+Cycle                    2 ----------------------------------------------------
+
+cycle          2
+Exec on pc                    0
+Fetch1
+Fetch : from Pc                   20 , expanded inst : 30f10700000000000000, 
+irmovq $'h0000000000000007,  %'h1
+
+Cycle                    3 ----------------------------------------------------
+
+cycle          3
+Mem on pc                    0
+Exec on pc                   10
+Fetch1
+Fetch : from Pc                   30 , expanded inst : 600361106030c00e0000, 
+addq %'h0, %'h3
+
+Cycle                    4 ----------------------------------------------------
+
+cycle          4
+Mem on pc                   10
+Exec on pc                   20
+Write Back
+WriteE writes                    1 on  0
+stall occured
+
+Cycle                    5 ----------------------------------------------------
+
+cycle          5
+Mem on pc                   20
+Write Back
+WriteE writes                    5 on  3
+Fetch1
+Fetch : from Pc                   32 , expanded inst : 61106030c00e0000aaaa, 
+subq %'h1, %'h0
+
+Cycle                    6 ----------------------------------------------------
+
+cycle          6
+Exec on pc                   30
+Write Back
+WriteE writes                    7 on  1
+Fetch1
+Fetch : from Pc                   34 , expanded inst : 6030c00e0000aaaaaaaa, 
+addq %'h3, %'h0
+
+Cycle                    7 ----------------------------------------------------
+
+cycle          7
+Mem on pc                   30
+Exec on pc                   32
+stall occured
+
+Cycle                    8 ----------------------------------------------------
+
+cycle          8
+Mem on pc                   32
+Write Back
+WriteE writes                    6 on  3
+stall occured
+
+Cycle                    9 ----------------------------------------------------
+
+cycle          9
+Write Back
+WriteE writes 18446744073709551610 on  0
+Fetch1
+Fetch : from Pc                   36 , expanded inst : c00e0000aaaaaaaaaaaa, 
+mtc0 %'h0, %'he
+
+Cycle                   10 ----------------------------------------------------
+
+cycle         10
+Exec on pc                   34
+stall occured
+
+Cycle                   11 ----------------------------------------------------
+
+cycle         11
+Mem on pc                   34
+stall occured
+
+Cycle                   12 ----------------------------------------------------
+
+cycle         12
+Write Back
+WriteE writes                    0 on  0
+Fetch1
+Fetch : from Pc                   38 , expanded inst : 0000aaaaaaaaaaaaaaaa, 
+halt
+
+Cycle                   13 ----------------------------------------------------
+
+cycle         13
+Exec on pc                   36
+Fetch1
+Fetch : from Pc                   39 , expanded inst : 00aaaaaaaaaaaaaaaaaa, 
+halt
+
+Cycle                   14 ----------------------------------------------------
+
+cycle         14
+Mem on pc                   36
+Exec on pc                   38
+Fetch1
+Fetch : from Pc                   40 , expanded inst : aaaaaaaaaaaaaaaaaaaa, 
+push %'ha
+
+Cycle                   15 ----------------------------------------------------
+
+cycle         15
+Mem on pc                   38
+Exec on pc                   39
+Write Back
+WriteE writes                    0 on 14
+Fetch1
+Fetch : from Pc                   42 , expanded inst : aaaaaaaaaaaaaaaaaaaa, 
+push %'ha
+
+Cycle                   16 ----------------------------------------------------
