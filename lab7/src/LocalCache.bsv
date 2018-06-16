@@ -62,9 +62,9 @@ module mkCacheDirectMap(Cache);
     let tag = tagArray.sub(idx);
     let dirty = dirtyArray.sub(idx);
     if(isValid(tag) && dirty) begin //writeback
-      let addr = {validValue(tag), idx, 3'b0};
+      let addr = getBlockAddr(validValue(tag), idx);
       let data = dataArray.sub(idx);
-      memReqQ.enq(CacheMemReq{op: St, addr: addr, data: data, burstLength:1});
+      memReqQ.enq(CacheMemReq{op: St, addr: addr, data: data, burstLength: fromInteger(valueOf(WordsPerBlock))});
     end
     status <= SendFillReq;
 	endrule
@@ -72,12 +72,9 @@ module mkCacheDirectMap(Cache);
 	rule sendFillReq(status == SendFillReq);
 		/* TODO: Implement here */
     let idx = getIdx(missReq.addr);
-    let tag = tagArray.sub(idx);
-    let addr = {validValue(tag), idx, 3'b0};
-    Line l = newVector;
-    l[0] = missReq.data;
-    let data = l;
-    memReqQ.enq(CacheMemReq{op: missReq.op, addr: missReq.addr, data: data, burstLength:1});
+    let tag = getTag(missReq.addr);
+    let aq = getOffset(missReq.addr);
+    memReqQ.enq(CacheMemReq{op: missReq.op, addr: getBlockAddr(tag, idx), data: ?, burstLength: fromInteger(valueOf(WordsPerBlock))});
     status <= WaitFillResp;
 	endrule
 
@@ -89,7 +86,7 @@ module mkCacheDirectMap(Cache);
     dataArray.upd(idx, data);
     tagArray.upd(idx, Valid(tag));
     dirtyArray.upd(idx, False);
-    hitQ.enq(data[0]);
+    hitQ.enq(data[getOffset(missReq.addr)]);
     memRespQ.deq;
     status <= Ready;
 	endrule
@@ -102,22 +99,21 @@ module mkCacheDirectMap(Cache);
 		let hit = isValid(currTag)? validValue(currTag) == tag : False;
 
     if(r.op == Ld) begin
-      if(hit) hitQ.enq(dataArray.sub(idx)[0]);
+      if(hit) hitQ.enq(dataArray.sub(idx)[getOffset(r.addr)]);
       else begin missReq <= r; status <= StartMiss; end
     end
     else begin//It is a store request
       if(hit) begin
         let asdf = r.data;
-        Line l = newVector;
-        l[0] = asdf;
+        Line l = dataArray.sub(idx);
+        l[getOffset(r.addr)] = asdf;
         dataArray.upd(idx, l);
         dirtyArray.upd(idx, True);
       end
       else begin//write-miss no allocate
-       let addr = {tag, idx, 3'b0};
        Line addd = newVector;
        addd[0] = r.data;
-       memReqQ.enq(CacheMemReq{op: St, addr: addr, data: addd, burstLength:1});
+       memReqQ.enq(CacheMemReq{op: St, addr: r.addr, data: addd, burstLength:1});
       end
     end
 
